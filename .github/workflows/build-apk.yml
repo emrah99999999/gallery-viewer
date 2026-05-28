@@ -15,6 +15,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Create web directory
+        run: |
+          mkdir -p www
+          cp index.html style.css script.js www/
+
       - name: Install Capacitor CLI
         run: npm install -g @capacitor/cli
 
@@ -24,7 +29,7 @@ jobs:
           npm install @capacitor/core @capacitor/android
 
       - name: Initialize Capacitor
-        run: npx cap init GalleryViewer com.example.galleryviewer --web-dir .
+        run: npx cap init GalleryViewer com.example.galleryviewer --web-dir www
 
       - name: Add Android platform
         run: npx cap add android

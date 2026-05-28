@@ -1,0 +1,42 @@
+name: Build Capacitor APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Capacitor
+        run: npm install -g @capacitor/cli @capacitor/core
+
+      - name: Init Capacitor project
+        run: |
+          npm init -y
+          npx cap init GalleryViewer com.example.galleryviewer --web-dir .
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync web files
+        run: npx cap sync
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk

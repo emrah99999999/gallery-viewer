@@ -15,6 +15,12 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'          # تغییر از 17 به 21
+
       - name: Create web directory
         run: |
           mkdir -p www

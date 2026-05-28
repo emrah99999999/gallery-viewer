@@ -19,12 +19,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'          # تغییر از 17 به 21
+          java-version: '21'
 
       - name: Create web directory
         run: |
           mkdir -p www
-          cp index.html style.css script.js www/
+          cp index.html style.css script.js www/ || true
 
       - name: Install Capacitor CLI
         run: npm install -g @capacitor/cli
@@ -42,6 +42,21 @@ jobs:
 
       - name: Sync web files
         run: npx cap sync
+
+      - name: Fix Kotlin version conflict
+        run: |
+          # Force consistent Kotlin version
+          sed -i 's/ext.kotlin_version = .*/ext.kotlin_version = "1.9.22"/' android/build.gradle
+          cat >> android/app/build.gradle << 'EOF'
+          
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22'
+    }
+}
+EOF
 
       - name: Build APK
         run: |

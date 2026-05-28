@@ -15,13 +15,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Capacitor
-        run: npm install -g @capacitor/cli @capacitor/core
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli
 
-      - name: Init Capacitor project
+      - name: Install Capacitor Core and Android
         run: |
           npm init -y
-          npx cap init GalleryViewer com.example.galleryviewer --web-dir .
+          npm install @capacitor/core @capacitor/android
+
+      - name: Initialize Capacitor
+        run: npx cap init GalleryViewer com.example.galleryviewer --web-dir .
 
       - name: Add Android platform
         run: npx cap add android
